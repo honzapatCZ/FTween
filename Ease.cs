@@ -6,8 +6,8 @@ namespace FTween
 {
 	public enum Ease
 	{
-		QuadraticEaseIn,
 		QuadraticEaseOut,
+		QuadraticEaseIn,
 		QuadraticEaseInOut,
 		CubicEaseIn,
 		CubicEaseOut,

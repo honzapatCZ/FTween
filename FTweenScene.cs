@@ -6,19 +6,19 @@ namespace FTween
 {
     public class FTweenScene : Script
     {
-        public List<FTween> tweens = new List<FTween>();
-        public List<FTween> toRemoveTweens = new List<FTween>();
+        public List<FTweener> tweens = new List<FTweener>();
+        public List<FTweener> toRemoveTweens = new List<FTweener>();
 
         public override void OnUpdate()
         {
-            foreach(FTween tween in tweens)
+            foreach(FTweener tween in tweens)
             {
                 if (!tween.setup)
                     tween.Setup();
 
                 tween.update(Time.DeltaTime);
             }
-            foreach(FTween tween in toRemoveTweens)
+            foreach(FTweener tween in toRemoveTweens)
             {
                 tweens.Remove(tween);
             }
@@ -32,7 +32,7 @@ namespace FTween
                 {
                     Actor act = new EmptyActor();
                     Level.SpawnActor(act);
-                    _instance = act.AddScript<FTweenScene>();
+                    _instance = act.AddScript(typeof(FTweenScene)) as FTweenScene;
                 }
                 return _instance;
             }
@@ -55,7 +55,7 @@ namespace FTween
             }
         }
 
-        public void AddT(FTween tween)
+        public void AddT(FTweener tween)
         {
             if (tweens.Contains(tween))
             {
@@ -63,7 +63,7 @@ namespace FTween
             }
             tweens.Add(tween);
         }
-        public void RemoveT(FTween tween)
+        public void RemoveT(FTweener tween)
         {
             if (!tweens.Contains(tween))
             {
@@ -72,11 +72,11 @@ namespace FTween
             toRemoveTweens.Add(tween);
         }
 
-        public static void AddTween(FTween tween)
+        public static void AddTween(FTweener tween)
         {
             Instance.AddT(tween);
         }
-        public static void RemoveTween(FTween tween)
+        public static void RemoveTween(FTweener tween)
         {
             Instance.RemoveT(tween);
         }

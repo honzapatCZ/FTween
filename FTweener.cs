@@ -7,12 +7,11 @@ namespace FTween
     public delegate T FGetter<out T>();
     public delegate void FSetter<in T>(T newValue);
 
-    public abstract class FTween
+    public abstract class FTweener
     {
         internal float duration;
-        internal bool speedBased;
 
-        public FTween(float time)
+        public FTweener(float time)
         {
             this.duration = time;
         }
@@ -28,34 +27,48 @@ namespace FTween
                 SetupSpeedBased();
         }
 
-        public void SetSpeedBased(bool val)
+        internal bool speedBased;
+        public FTweener SetSpeedBased(bool val)
         {
+            if (setup) Debug.LogWarning("Tried to modify running tween");
+            
             speedBased = val;
+            return this;
         }
         internal float startDelay = 0;
-        public void SetDelay(float val)
+        public FTweener SetDelay(float val)
         {
+            if (setup) Debug.LogWarning("Tried to modify running tween");
+
             startDelay = val;
+            return this;
         }
 
         internal Ease ease;
-        public void SetEase(Ease ease)
+        public FTweener SetEase(Ease ease)
         {
+            if (setup) Debug.LogWarning("Tried to modify running tween");
+
             this.ease = ease;
+            return this;
         }
         
         public abstract void Reverse();
 
         internal Action onComplete;
-        public void OnComplete(Action onComplete)
+        public FTweener OnComplete(Action onComplete)
         {
             this.onComplete += onComplete;
+            return this;
         }
 
         internal int loops = 0;
-        public void SetLoops(int loops)
+        public FTweener SetLoops(int loops)
         {
+            if (setup) Debug.LogWarning("Tried to modify running tween");
+
             this.loops = loops;
+            return this;
         }
 
         internal float timeFromStart = 0;
@@ -64,19 +77,21 @@ namespace FTween
         internal abstract void SetupSpeedBased();
 
         internal abstract void SetValueByNormal(float normal);
-
-        public void Start()
+        
+        public FTweener Start()
         {
             FTweenScene.AddTween(this);
+            return this;
         }
         public void Kill()
         {
             FTweenScene.RemoveTween(this);
             GC.SuppressFinalize(this);
         }
+        
     }
 
-    public abstract class FTween<T1> : FTween where T1: struct
+    public abstract class FTweener<T1> : FTweener where T1: struct
     {
         internal FGetter<T1> getter;
         internal FSetter<T1> setter;
@@ -84,7 +99,7 @@ namespace FTween
         internal T1 endValue;
         internal T1 difference;
 
-        public FTween(FGetter<T1> getter, FSetter<T1> setter, T1 end, float time) : base(time)
+        public FTweener(FGetter<T1> getter, FSetter<T1> setter, T1 end, float time) : base(time)
         {
             this.getter = getter;
             this.setter = setter;
@@ -134,9 +149,9 @@ namespace FTween
         internal abstract float GetDurationIfSpeedBased();
     }
 
-    public class FloatFTween : FTween<float>
+    public class FloatFTweener : FTweener<float>
     {
-        public FloatFTween(FGetter<float> getter, FSetter<float> setter, float end, float time) : base(getter, setter, end, time){}
+        public FloatFTweener(FGetter<float> getter, FSetter<float> setter, float end, float time) : base(getter, setter, end, time){}
 
         internal override float GetDifference()
         {
@@ -154,9 +169,9 @@ namespace FTween
         }
     }
 
-    public class ColorFTween : FTween<Color>
+    public class ColorFTweener : FTweener<Color>
     {
-        public ColorFTween(FGetter<Color> getter, FSetter<Color> setter, Color end, float time) : base(getter, setter, end, time) { }
+        public ColorFTweener(FGetter<Color> getter, FSetter<Color> setter, Color end, float time) : base(getter, setter, end, time) { }
 
         internal override Color GetDifference()
         {
@@ -174,9 +189,9 @@ namespace FTween
         }
     }
 
-    public class Vector4FTween : FTween<Vector4>
+    public class Vector4FTweener : FTweener<Vector4>
     {
-        public Vector4FTween(FGetter<Vector4> getter, FSetter<Vector4> setter, Vector4 end, float time) : base(getter, setter, end, time){}
+        public Vector4FTweener(FGetter<Vector4> getter, FSetter<Vector4> setter, Vector4 end, float time) : base(getter, setter, end, time){}
 
         internal override Vector4 GetDifference()
         {
@@ -193,9 +208,9 @@ namespace FTween
             setter(startValue + difference * normal);
         }
     }
-    public class Vector3FTween : FTween<Vector3>
+    public class Vector3FTweener : FTweener<Vector3>
     {
-        public Vector3FTween(FGetter<Vector3> getter, FSetter<Vector3> setter, Vector3 end, float time) : base(getter, setter, end, time) { }
+        public Vector3FTweener(FGetter<Vector3> getter, FSetter<Vector3> setter, Vector3 end, float time) : base(getter, setter, end, time) { }
 
         internal override Vector3 GetDifference()
         {
@@ -212,9 +227,9 @@ namespace FTween
             setter(startValue + difference * normal);
         }
     }
-    public class Vector2FTween : FTween<Vector2>
+    public class Vector2FTweener : FTweener<Vector2>
     {
-        public Vector2FTween(FGetter<Vector2> getter, FSetter<Vector2> setter, Vector2 end, float time) : base(getter, setter, end, time) { }
+        public Vector2FTweener(FGetter<Vector2> getter, FSetter<Vector2> setter, Vector2 end, float time) : base(getter, setter, end, time) { }
 
         internal override Vector2 GetDifference()
         {
