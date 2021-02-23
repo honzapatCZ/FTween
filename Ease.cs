@@ -6,38 +6,42 @@ namespace FTween
 {
 	public enum Ease
 	{
-		QuadraticEaseOut,
-		QuadraticEaseIn,
-		QuadraticEaseInOut,
-		CubicEaseIn,
-		CubicEaseOut,
-		CubicEaseInOut,
-		QuarticEaseIn,
-		QuarticEaseOut,
-		QuarticEaseInOut,
-		QuinticEaseIn,
-		QuinticEaseOut,
-		QuinticEaseInOut,
-		SineEaseIn,
-		SineEaseOut,
-		SineEaseInOut,
-		CircularEaseIn,
-		CircularEaseOut,
-		CircularEaseInOut,
-		ExponentialEaseIn,
-		ExponentialEaseOut,
-		ExponentialEaseInOut,
-		ElasticEaseIn,
-		ElasticEaseOut,
-		ElasticEaseInOut,
-		BackEaseIn,
-		BackEaseOut,
-		BackEaseInOut,
-		BounceEaseIn,
-		BounceEaseOut,
-		BounceEaseInOut,
+		QuadraticOut,
+		QuadraticIn,
+		QuadraticInOut,
+		CubicIn,
+		CubicOut,
+		CubicInOut,
+		QuarticIn,
+		QuarticOut,
+		QuarticInOut,
+		QuinticIn,
+		QuinticOut,
+		QuinticInOut,
+		SineIn,
+		SineOut,
+		SineInOut,
+		CircularIn,
+		CircularOut,
+		CircularInOut,
+		ExponentialIn,
+		ExponentialOut,
+		ExponentialInOut,
+		ElasticIn,
+		ElasticOut,
+		ElasticInOut,
+		BackIn,
+		BackOut,
+		BackInOut,
+		BounceIn,
+		BounceOut,
+		BounceInOut,
 		Linear,
+		__Custom
 	}
+	
+	public delegate float EaseDelegate(float value);
+
 	public class EaseFunc : Script
 	{
 		/// <summary>
@@ -57,42 +61,43 @@ namespace FTween
 		/// <summary>
 		/// Interpolate using the specified function.
 		/// </summary>
-		static public float Evaluate(float p, Ease function)
+		static public float Evaluate(float p, Ease function, EaseDelegate del)
 		{
 			switch (function)
 			{
 				default:
-				case Ease.QuadraticEaseOut: return QuadraticEaseOut(p);
-				case Ease.QuadraticEaseIn: return QuadraticEaseIn(p);
-				case Ease.QuadraticEaseInOut: return QuadraticEaseInOut(p);
-				case Ease.CubicEaseIn: return CubicEaseIn(p);
-				case Ease.CubicEaseOut: return CubicEaseOut(p);
-				case Ease.CubicEaseInOut: return CubicEaseInOut(p);
-				case Ease.QuarticEaseIn: return QuarticEaseIn(p);
-				case Ease.QuarticEaseOut: return QuarticEaseOut(p);
-				case Ease.QuarticEaseInOut: return QuarticEaseInOut(p);
-				case Ease.QuinticEaseIn: return QuinticEaseIn(p);
-				case Ease.QuinticEaseOut: return QuinticEaseOut(p);
-				case Ease.QuinticEaseInOut: return QuinticEaseInOut(p);
-				case Ease.SineEaseIn: return SineEaseIn(p);
-				case Ease.SineEaseOut: return SineEaseOut(p);
-				case Ease.SineEaseInOut: return SineEaseInOut(p);
-				case Ease.CircularEaseIn: return CircularEaseIn(p);
-				case Ease.CircularEaseOut: return CircularEaseOut(p);
-				case Ease.CircularEaseInOut: return CircularEaseInOut(p);
-				case Ease.ExponentialEaseIn: return ExponentialEaseIn(p);
-				case Ease.ExponentialEaseOut: return ExponentialEaseOut(p);
-				case Ease.ExponentialEaseInOut: return ExponentialEaseInOut(p);
-				case Ease.ElasticEaseIn: return ElasticEaseIn(p);
-				case Ease.ElasticEaseOut: return ElasticEaseOut(p);
-				case Ease.ElasticEaseInOut: return ElasticEaseInOut(p);
-				case Ease.BackEaseIn: return BackEaseIn(p);
-				case Ease.BackEaseOut: return BackEaseOut(p);
-				case Ease.BackEaseInOut: return BackEaseInOut(p);
-				case Ease.BounceEaseIn: return BounceEaseIn(p);
-				case Ease.BounceEaseOut: return BounceEaseOut(p);
-				case Ease.BounceEaseInOut: return BounceEaseInOut(p);
+				case Ease.QuadraticOut: return QuadraticEaseOut(p);
+				case Ease.QuadraticIn: return QuadraticEaseIn(p);
+				case Ease.QuadraticInOut: return QuadraticEaseInOut(p);
+				case Ease.CubicIn: return CubicEaseIn(p);
+				case Ease.CubicOut: return CubicEaseOut(p);
+				case Ease.CubicInOut: return CubicEaseInOut(p);
+				case Ease.QuarticIn: return QuarticEaseIn(p);
+				case Ease.QuarticOut: return QuarticEaseOut(p);
+				case Ease.QuarticInOut: return QuarticEaseInOut(p);
+				case Ease.QuinticIn: return QuinticEaseIn(p);
+				case Ease.QuinticOut: return QuinticEaseOut(p);
+				case Ease.QuinticInOut: return QuinticEaseInOut(p);
+				case Ease.SineIn: return SineEaseIn(p);
+				case Ease.SineOut: return SineEaseOut(p);
+				case Ease.SineInOut: return SineEaseInOut(p);
+				case Ease.CircularIn: return CircularEaseIn(p);
+				case Ease.CircularOut: return CircularEaseOut(p);
+				case Ease.CircularInOut: return CircularEaseInOut(p);
+				case Ease.ExponentialIn: return ExponentialEaseIn(p);
+				case Ease.ExponentialOut: return ExponentialEaseOut(p);
+				case Ease.ExponentialInOut: return ExponentialEaseInOut(p);
+				case Ease.ElasticIn: return ElasticEaseIn(p);
+				case Ease.ElasticOut: return ElasticEaseOut(p);
+				case Ease.ElasticInOut: return ElasticEaseInOut(p);
+				case Ease.BackIn: return BackEaseIn(p);
+				case Ease.BackOut: return BackEaseOut(p);
+				case Ease.BackInOut: return BackEaseInOut(p);
+				case Ease.BounceIn: return BounceEaseIn(p);
+				case Ease.BounceOut: return BounceEaseOut(p);
+				case Ease.BounceInOut: return BounceEaseInOut(p);
 				case Ease.Linear: return Linear(p);
+				case Ease.__Custom: return del(p);
 			}
 		}
 
@@ -190,9 +195,9 @@ namespace FTween
 		}
 
 		/// <summary>
-		// Modeled after the piecewise quartic
-		// y = (1/2)((2x)^4)        ; [0, 0.5)
-		// y = -(1/2)((2x-2)^4 - 2) ; [0.5, 1]
+		/// Modeled after the piecewise quartic
+		/// y = (1/2)((2x)^4)        ; [0, 0.5)
+		/// y = -(1/2)((2x-2)^4 - 2) ; [0.5, 1]
 		/// </summary>
 		static public float QuarticEaseInOut(float p)
 		{

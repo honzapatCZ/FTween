@@ -11,6 +11,8 @@ namespace FTween
     {
         internal float duration;
 
+        public float timeScale;
+
         public FTweener(float time)
         {
             this.duration = time;
@@ -45,6 +47,7 @@ namespace FTween
         }
 
         internal Ease ease;
+        internal EaseDelegate customEase;
         public FTweener SetEase(Ease ease)
         {
             if (setup) Debug.LogWarning("Tried to modify running tween");
@@ -52,8 +55,26 @@ namespace FTween
             this.ease = ease;
             return this;
         }
-        
-        public abstract void Reverse();
+        public FTweener SetEase(EaseDelegate ease)
+        {
+            if (setup) Debug.LogWarning("Tried to modify running tween");
+
+            this.ease = Ease.__Custom;
+            customEase = ease;
+            return this;
+        }
+
+        public abstract FTweener Reverse();
+
+        internal bool _isComplete;
+        public bool isComplete
+        {
+            get
+            {
+                return _isComplete;
+            }
+                
+        }
 
         internal Action onComplete;
         public FTweener OnComplete(Action onComplete)
@@ -109,23 +130,24 @@ namespace FTween
             this.difference = GetDifference();
         }
 
-        public override void Reverse()
+        public override FTweener Reverse()
         {
             T1 prevEnd = endValue;
             endValue = startValue;
             startValue = prevEnd;
 
             this.difference = GetDifference();
+            return this;
         }
         internal override void update(float delta)
         {
-            timeFromStart += delta;
+            timeFromStart += delta*timeScale;
             float relativeTime = timeFromStart - startDelay;
             if (relativeTime > 0 && relativeTime < duration)
             {
                 float percentage = relativeTime / duration;
 
-                SetValueByNormal(EaseFunc.Evaluate(percentage, ease));
+                SetValueByNormal(EaseFunc.Evaluate(percentage, ease, customEase));
             }
             else if(relativeTime >= duration)
             {
@@ -137,6 +159,7 @@ namespace FTween
                 }
                 else
                 {
+                    _isComplete = true;
                     Kill();
                 }
             }
