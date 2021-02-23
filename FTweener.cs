@@ -11,7 +11,9 @@ namespace FTween
     {
         internal float duration;
 
-        public float timeScale;
+        public float timeScale = 1;
+
+        public Sequence parentSeq;
 
         public FTweener(float time)
         {
@@ -83,6 +85,13 @@ namespace FTween
             return this;
         }
 
+        internal Action onLoopComplete;
+        public FTweener OnLoopComplete(Action onLoopComplete)
+        {
+            this.onLoopComplete += onLoopComplete;
+            return this;
+        }
+
         internal int loops = 0;
         public FTweener SetLoops(int loops)
         {
@@ -92,13 +101,21 @@ namespace FTween
             return this;
         }
 
+        public virtual void ResetCurrentLoop()
+        {
+            timeFromStart = 0;
+        }
+        public virtual void Reset()
+        {
+            timeFromStart = 0;
+            _isComplete = false;
+        }
+
         internal float timeFromStart = 0;
 
         internal abstract void update(float delta);
         internal abstract void SetupSpeedBased();
-
-        internal abstract void SetValueByNormal(float normal);
-        
+                
         public FTweener Start()
         {
             FTweenScene.AddTween(this);
@@ -130,6 +147,12 @@ namespace FTween
             this.difference = GetDifference();
         }
 
+        public override void Reset()
+        {
+            base.Reset();
+            setter(startValue);
+        }
+
         public override FTweener Reverse()
         {
             T1 prevEnd = endValue;
@@ -143,24 +166,26 @@ namespace FTween
         {
             timeFromStart += delta*timeScale;
             float relativeTime = timeFromStart - startDelay;
-            if (relativeTime > 0 && relativeTime < duration)
+            if (relativeTime > 0 && !isComplete)
             {
                 float percentage = relativeTime / duration;
 
                 SetValueByNormal(EaseFunc.Evaluate(percentage, ease, customEase));
             }
-            else if(relativeTime >= duration)
+            if(relativeTime >= duration && !isComplete)
             {
-                onComplete?.Invoke();
                 if(loops != 0)
                 {
                     loops--;
-                    timeFromStart = 0;
+                    onLoopComplete?.Invoke();
+                    ResetCurrentLoop();
                 }
                 else
                 {
+                    onComplete?.Invoke();
                     _isComplete = true;
-                    Kill();
+                    if(parentSeq == null)
+                        Kill();
                 }
             }
         }
@@ -170,6 +195,8 @@ namespace FTween
         }
         internal abstract T1 GetDifference();
         internal abstract float GetDurationIfSpeedBased();
+
+        internal abstract void SetValueByNormal(float normal);
     }
 
     public class FloatFTweener : FTweener<float>
