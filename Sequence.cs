@@ -61,6 +61,15 @@ namespace FTween
             tweens.Add(new SeqTween(time, tween));
         }
 
+        public override void ResetCurrentLoop()
+        {
+            base.ResetCurrentLoop();
+            foreach (SeqTween seqTween in tweens)
+            {
+                seqTween.tween.Reset();
+            }
+        }
+
         internal override void update(float delta)
         {
             timeFromStart += delta * timeScale;
@@ -82,10 +91,6 @@ namespace FTween
                 {
                     loops--;
                     onLoopComplete?.Invoke();
-                    foreach (SeqTween seqTween in tweens)
-                    {
-                        seqTween.tween.Reset();
-                    }
                     ResetCurrentLoop();
                 }
                 else

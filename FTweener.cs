@@ -107,7 +107,7 @@ namespace FTween
         }
         public virtual void Reset()
         {
-            timeFromStart = 0;
+            ResetCurrentLoop();
             _isComplete = false;
         }
 
