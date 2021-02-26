@@ -6,6 +6,19 @@ namespace FTween
 {
     public static class Extensions
     {
+        public static Vector2FTweener FTLocation(this FlaxEngine.GUI.Control actor, Vector2 endPos, float time)
+        {
+            return new Vector2FTweener(() => actor.Location, (y) => actor.Location = y, endPos, time);
+        }
+        public static FloatFTweener FTLocationX(this FlaxEngine.GUI.Control actor, float endPos, float time)
+        {
+            return new FloatFTweener(() => actor.Location.X, (y) => actor.Location += new Vector2(1, 0) * (y - actor.Location.X), endPos, time);
+        }
+        public static FloatFTweener FTLocationY(this FlaxEngine.GUI.Control actor, float endPos, float time)
+        {
+            return new FloatFTweener(() => actor.Location.Y, (y) => actor.Location += new Vector2(0, 1) * (y - actor.Location.Y), endPos, time);
+        }
+
         public static Vector3FTweener FTMove(this Actor actor, Vector3 endPos, float time)
         {
             return new Vector3FTweener(() => actor.Position, (y) => actor.Position = y, endPos, time);
@@ -64,6 +77,14 @@ namespace FTween
         public static Vector3FTweener FTLocalRotateBy(this Actor actor, Vector3 endPos, float time)
         {
             return new Vector3FTweener(() => actor.LocalEulerAngles, (y) => actor.LocalEulerAngles += y - actor.LocalEulerAngles, endPos + actor.LocalEulerAngles, time);
+        }
+        public static QuaternionFTweener FTRotateQuaternion(this Actor actor, Quaternion endPos, float time)
+        {
+            return new QuaternionFTweener(() => actor.Orientation, (y) => actor.Orientation = y, endPos, time);
+        }
+        public static QuaternionFTweener FTLocalRotateQuaternion(this Actor actor, Quaternion endPos, float time)
+        {
+            return new QuaternionFTweener(() => actor.LocalOrientation, (y) => actor.LocalOrientation = y, endPos, time);
         }
 
         public static FloatFTweener FTFade(this AudioSource actor, float endPos, float time)

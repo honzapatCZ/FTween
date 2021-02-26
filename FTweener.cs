@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using FlaxEngine;
 
 namespace FTween
@@ -27,9 +28,12 @@ namespace FTween
                 Debug.LogWarning("Tried to setup again");
             setup = true;
 
+            InnerSetup();
+
             if (speedBased)
                 SetupSpeedBased();
         }
+        internal virtual void InnerSetup() { }
 
         internal bool speedBased;
         public FTweener SetSpeedBased(bool val)
@@ -126,7 +130,31 @@ namespace FTween
             FTweenScene.RemoveTween(this);
             GC.SuppressFinalize(this);
         }
-        
+
+        public FTWeenerAwaiter GetAwaiter()
+        {
+            return new FTWeenerAwaiter(this);
+        }
+    }
+    public class FTWeenerAwaiter : INotifyCompletion
+    {
+        public FTweener tween;
+        public FTWeenerAwaiter(FTweener tween)
+        {
+            this.tween = tween;
+        }
+        public bool IsCompleted
+        {
+            get
+            {
+                return tween.isComplete;
+            }
+        }
+        public void OnCompleted(Action continuation)
+        {
+            tween.OnComplete(continuation);
+        }
+        public void GetResult(){}
     }
 
     public abstract class FTweener<T1> : FTweener where T1: struct
@@ -142,8 +170,12 @@ namespace FTween
             this.getter = getter;
             this.setter = setter;
             this.endValue = end;
+        }
+
+        internal override void InnerSetup()
+        {
+            base.InnerSetup();
             this.startValue = getter();
-            
             this.difference = GetDifference();
         }
 
@@ -153,13 +185,22 @@ namespace FTween
             setter(startValue);
         }
 
+        public virtual FTweener From(T1 theVal)
+        {
+            endValue = startValue;
+            startValue = theVal;
+
+            difference = GetDifference();
+            return this;
+        }
+
         public override FTweener Reverse()
         {
             T1 prevEnd = endValue;
             endValue = startValue;
             startValue = prevEnd;
 
-            this.difference = GetDifference();
+            difference = GetDifference();
             return this;
         }
         internal override void update(float delta)
@@ -282,6 +323,25 @@ namespace FTween
         public Vector2FTweener(FGetter<Vector2> getter, FSetter<Vector2> setter, Vector2 end, float time) : base(getter, setter, end, time) { }
 
         internal override Vector2 GetDifference()
+        {
+            return endValue - startValue;
+        }
+
+        internal override float GetDurationIfSpeedBased()
+        {
+            return difference.Length / duration;
+        }
+
+        internal override void SetValueByNormal(float normal)
+        {
+            setter(startValue + difference * normal);
+        }
+    }
+    public class QuaternionFTweener : FTweener<Quaternion>
+    {
+        public QuaternionFTweener(FGetter<Quaternion> getter, FSetter<Quaternion> setter, Quaternion end, float time) : base(getter, setter, end, time) { }
+
+        internal override Quaternion GetDifference()
         {
             return endValue - startValue;
         }

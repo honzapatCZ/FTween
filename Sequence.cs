@@ -35,30 +35,27 @@ namespace FTween
         List<SeqTween> tweens = new List<SeqTween>();
 
         float lastTweenInsertTime;
-        public void Append(FTweener tween)
+        public Sequence Append(FTweener tween)
         {
-            Insert(tween, duration);
+            return Insert(tween, duration);
         }
-        public void Insert(FTweener tween)
+        public Sequence Insert(FTweener tween)
         {
-            Insert(tween, lastTweenInsertTime);
+            return Insert(tween, lastTweenInsertTime);
         }
-        public void Insert(FTweener tween, float time)
+        public Sequence Insert(FTweener tween, float time)
         {
             if(tween.loops != 0)
             {
                 Debug.LogWarning("You cant have loop tween in sequence, setting tween loops to 0");
                 tween.loops = 0;
             }
-            if(!tween.setup)
-            {
-                tween.Setup();
-            }
             duration = Mathf.Max(duration, time + (tween.duration * tween.timeScale * timeScale) + tween.startDelay);
             lastTweenInsertTime = time;
             tween.parentSeq = this;
 
             tweens.Add(new SeqTween(time, tween));
+            return this;
         }
 
         public override void ResetCurrentLoop()
@@ -81,6 +78,9 @@ namespace FTween
                 {
                     if(relativeTime > seqTween.time)
                     {
+                        if (!seqTween.tween.setup)
+                            seqTween.tween.Setup();
+
                         seqTween.tween.update(delta * timeScale);
                     }
                 }
