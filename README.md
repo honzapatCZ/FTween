@@ -6,7 +6,7 @@ Simple to use tweening library for flax.
 ## As simple as doing
 
 ```cs
-using using FTween;
+using FTween;
 
 Actor.FTLocalMoveY(100, 5).Start();
 ```
