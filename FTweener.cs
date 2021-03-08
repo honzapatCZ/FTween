@@ -178,13 +178,13 @@ namespace FTween
             this.startValue = getter();
             this.difference = GetDifference();
         }
-
+        /*
         public override void Reset()
         {
             base.Reset();
             setter(startValue);
         }
-
+        */
         public virtual FTweener From(T1 theVal)
         {
             endValue = startValue;
@@ -215,7 +215,7 @@ namespace FTween
             }
             if(relativeTime >= duration && !isComplete)
             {
-                if(loops != 0)
+                if (loops != 0)
                 {
                     loops--;
                     onLoopComplete?.Invoke();
@@ -257,6 +257,37 @@ namespace FTween
         internal override void SetValueByNormal(float normal)
         {
             setter(startValue+(endValue-startValue)*normal);
+        }
+
+        public static Sequence Shake(FGetter<float> getter, FSetter<float> setter, float offset, float time, float strength = 90, int vibrato = 10, float randomness = 90, bool fade = true)
+        {
+            Sequence seq = new Sequence();
+            Random rnd = new Random();
+            int steps = vibrato + 1;
+            for(int i = 1; i <= steps; i++)
+            {
+                float random = FlaxEngine.Utilities.Extensions.NextFloat(rnd, -randomness, randomness);
+                float endVal = random + strength * (i % 2 == 0 ? -1 : 1);
+                float dur = time / steps;
+                if (fade)
+                {
+                    endVal = endVal * (1 -(i / steps));
+                    dur = ((2 * time - 2 * (steps+1)) / (steps * (steps + 1))) * i;
+                    Debug.Log(dur);
+                }
+                if(i == 1)
+                {
+                    dur /= 2;
+                }
+                else if (i == steps)
+                {
+                    dur /= 2;
+                    endVal = 0;
+                }
+                seq.Append(new FloatFTweener(getter, setter, endVal + offset, dur).SetEase(Ease.Linear));
+            }
+
+            return seq;
         }
     }
 
@@ -335,6 +366,13 @@ namespace FTween
         internal override void SetValueByNormal(float normal)
         {
             setter(startValue + difference * normal);
+        }
+        public static Sequence Shake(FGetter<Vector2> getter, FSetter<Vector2> setter, Vector2 offset, float time, float strength = 90, int vibrato = 10, float randomness = 90, bool fade = true)
+        {
+            Sequence seq = new Sequence();
+            seq.Insert(FloatFTweener.Shake(() => getter().X, (y) => setter(new Vector2(y, getter().Y)), offset.X, time, strength, vibrato, randomness, fade));
+            seq.Insert(FloatFTweener.Shake(() => getter().Y, (y) => setter(new Vector2(getter().X, y)), offset.Y, time, strength, vibrato, randomness, fade));
+            return seq;
         }
     }
     public class QuaternionFTweener : FTweener<Quaternion>

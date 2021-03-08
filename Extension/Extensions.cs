@@ -18,6 +18,14 @@ namespace FTween
         {
             return new FloatFTweener(() => actor.Location.Y, (y) => actor.Location += new Vector2(0, 1) * (y - actor.Location.Y), endPos, time);
         }
+        public static Sequence FTShakeRotation(this FlaxEngine.GUI.Control actor, float time, float strength = 90, int vibrato = 10, float randomness = 90, bool fade = true)
+        {
+            return FloatFTweener.Shake(() => actor.Rotation, (y) =>actor.Rotation += y - actor.Rotation, actor.Rotation, time, strength, vibrato, randomness, fade);
+        }
+        public static Sequence FTShakeScale(this FlaxEngine.GUI.Control actor, float time, float strength = 90, int vibrato = 10, float randomness = 90, bool fade = true)
+        {
+            return Vector2FTweener.Shake(() => actor.Scale, (y) => actor.Scale += y - actor.Scale, actor.Scale, time, strength, vibrato, randomness, fade);
+        }
 
         public static Vector3FTweener FTMove(this Actor actor, Vector3 endPos, float time)
         {
