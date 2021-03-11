@@ -15,14 +15,13 @@ namespace FTween
             foreach (FTweener tween in toAddTweens)
             {
                 tweens.Add(tween);
+                if (!tween.setup)
+                    tween.Setup();
             }
             toAddTweens.Clear();
 
             foreach (FTweener tween in tweens)
             {
-                if (!tween.setup)
-                    tween.Setup();
-
                 tween.update(Time.DeltaTime);
             }
             foreach (FTweener tween in toRemoveTweens)
