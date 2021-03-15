@@ -215,6 +215,7 @@ namespace FTween
             }
             if(relativeTime >= duration && !isComplete)
             {
+                SetValueByNormal(1);
                 if (loops != 0)
                 {
                     loops--;
@@ -256,7 +257,7 @@ namespace FTween
 
         internal override void SetValueByNormal(float normal)
         {
-            setter(startValue+(endValue-startValue)*normal);
+            setter(startValue+difference*normal);
         }
 
         public static Sequence Shake(FGetter<float> getter, FSetter<float> setter, float offset, float time, float strength = 90, int vibrato = 10, float randomness = 90, bool fade = true)
