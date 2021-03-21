@@ -4,13 +4,36 @@ using FlaxEngine;
 
 namespace FTween
 {
-    public class FTweenScene : Script
+    public class FTweenScene : GamePlugin
     {
         public List<FTweener> tweens = new List<FTweener>();
         public List<FTweener> toAddTweens = new List<FTweener>();
         public List<FTweener> toRemoveTweens = new List<FTweener>();
 
-        public override void OnUpdate()
+        public override void Initialize()
+        {
+            base.Initialize();
+            Scripting.Update += OnUpdate;
+        }
+        public override void Deinitialize()
+        {
+            Scripting.Update -= OnUpdate;
+            base.Deinitialize();
+        }
+        public override PluginDescription Description => new PluginDescription {
+            Name = "FTween Runtime Game Plugin",
+            Version = new Version(0,1),
+            Author = "honzapat_CZ",
+            AuthorUrl = "https://github.com/honzapatCZ, https://nejcraft.cz",
+            HomepageUrl = "https://github.com/honzapatCZ/FTween",
+            RepositoryUrl = "https://github.com/honzapatCZ/FTween",
+            Description = "This is the runtime plugin of FTween it manages tween updates",
+            Category = "Utility, Tweening",
+            IsBeta = true,
+            IsAlpha = false
+        };
+
+        void OnUpdate()
         {
             foreach (FTweener tween in toAddTweens)
             {
@@ -30,37 +53,11 @@ namespace FTween
             }
             toRemoveTweens.Clear();
         }
-        public static FTweenScene _instance;
 
         public static FTweenScene Instance {
             get
             {
-                if(_instance == null)
-                {
-                    Actor act = new EmptyActor();
-
-                    Level.SpawnActor(act);
-
-                    _instance = act.AddScript(typeof(FTweenScene)) as FTweenScene;
-                }
-                return _instance;
-            }
-            set
-            {
-                if(_instance != null)
-                {
-                    Debug.LogWarning("Tried to assign new FTweenScene when the current is not null");
-                    return;
-                }
-                _instance = value;
-            }
-        }
-        public override void OnDestroy()
-        {
-            base.OnDestroy();
-            if(_instance == this)
-            {
-                _instance = null;
+                return PluginManager.GetPlugin<FTweenScene>();
             }
         }
 
