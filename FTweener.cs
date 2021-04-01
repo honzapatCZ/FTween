@@ -211,11 +211,28 @@ namespace FTween
             {
                 float percentage = relativeTime / duration;
 
-                SetValueByNormal(EaseFunc.Evaluate(percentage, ease, customEase));
+                try
+                {
+                    SetValueByNormal(EaseFunc.Evaluate(percentage, ease, customEase));
+                }
+                catch(Exception e)
+                {
+                    Debug.Log("Error has been thrown during update of tween: " + e.Message);
+                    Debug.Log(e.StackTrace);
+                }                
             }
             if(relativeTime >= duration && !isComplete)
             {
-                SetValueByNormal(1);
+                try
+                {
+                    SetValueByNormal(1);
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("Error has been thrown during update of tween: " + e.Message);
+                    Debug.Log(e.StackTrace);
+                }
+
                 if (loops != 0)
                 {
                     loops--;
