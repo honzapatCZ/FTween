@@ -385,7 +385,7 @@ namespace FTween
         {
             setter(startValue + difference * normal);
         }
-        public static Sequence Shake(FGetter<Vector2> getter, FSetter<Vector2> setter, Vector2 offset, float time, float strength = 90, int vibrato = 10, float randomness = 90, bool fade = true)
+        public static Sequence Shake(FGetter<Vector2> getter, FSetter<Vector2> setter, Vector2 offset, float time, float strength = 2, int vibrato = 2, float randomness = 2, bool fade = true)
         {
             Sequence seq = new Sequence();
             seq.Insert(FloatFTweener.Shake(() => getter().X, (y) => setter(new Vector2(y, getter().Y)), offset.X, time, strength, vibrato, randomness, fade));

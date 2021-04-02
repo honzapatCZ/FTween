@@ -22,7 +22,7 @@ namespace FTween
         {
             return FloatFTweener.Shake(() => actor.Rotation, (y) =>actor.Rotation += y - actor.Rotation, actor.Rotation, time, strength, vibrato, randomness, fade);
         }
-        public static Sequence FTShakeScale(this FlaxEngine.GUI.Control actor, float time, float strength = 90, int vibrato = 10, float randomness = 90, bool fade = true)
+        public static Sequence FTShakeScale(this FlaxEngine.GUI.Control actor, float time, float strength = 2, int vibrato = 2, float randomness = 2, bool fade = true)
         {
             return Vector2FTweener.Shake(() => actor.Scale, (y) => actor.Scale += y - actor.Scale, actor.Scale, time, strength, vibrato, randomness, fade);
         }

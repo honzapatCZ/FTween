@@ -6,24 +6,21 @@ namespace FTween
 {
     public class FTweenScene : GamePlugin
     {
-        public List<FTweener> tweens = null;
-        public List<FTweener> toAddTweens = null;
-        public List<FTweener> toRemoveTweens = null;
+        public List<FTweener> tweens = new List<FTweener>();
+        public List<FTweener> toAddTweens = new List<FTweener>();
+        public List<FTweener> toRemoveTweens = new List<FTweener>();
 
         public override void Initialize()
         {
             base.Initialize();
-            tweens = new List<FTweener>();
-            toAddTweens = new List<FTweener>();
-            toRemoveTweens = new List<FTweener>();
             Scripting.Update += OnUpdate;
         }
         public override void Deinitialize()
         {
             Scripting.Update -= OnUpdate;
-            tweens = null;
-            toAddTweens = null;
-            toRemoveTweens = null;
+            tweens.Clear();
+            toAddTweens.Clear();
+            toRemoveTweens.Clear();
             base.Deinitialize();
         }
         public override PluginDescription Description => new PluginDescription {
