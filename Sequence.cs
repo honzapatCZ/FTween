@@ -58,6 +58,19 @@ namespace FTween
             return this;
         }
 
+        public Sequence AppendCallback(Action onDone)
+        {
+            return Append(new FCallback(onDone));
+        }
+        public Sequence InsertCallback(Action onDone)
+        {
+            return Insert(new FCallback(onDone));
+        }
+        public Sequence InsertCallback(Action onDone, float time)
+        {
+            return Insert(new FCallback(onDone), time);
+        }
+
         public override void ResetCurrentLoop()
         {
             base.ResetCurrentLoop();
