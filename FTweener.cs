@@ -165,6 +165,33 @@ namespace FTween
         internal T1 endValue;
         internal T1 difference;
 
+        protected T1 GetSafe()
+        {
+            try
+            {
+                return getter();
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Error has been thrown during getting the value of tween: " + e.Message);
+                Debug.Log(e.StackTrace);
+                return new T1();
+            }
+        }
+
+        protected void SetSafe(T1 val)
+        {
+            try
+            {
+                setter(val);
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Error has been thrown during setting the value of tween: " + e.Message);
+                Debug.Log(e.StackTrace);
+            }
+        }
+
         public FTweener(FGetter<T1> getter, FSetter<T1> setter, T1 end, float time) : base(time)
         {
             this.getter = getter;
@@ -175,7 +202,7 @@ namespace FTween
         internal override void InnerSetup()
         {
             base.InnerSetup();
-            this.startValue = getter();
+            this.startValue = GetSafe();
             this.difference = GetDifference();
         }
         /*
@@ -236,12 +263,28 @@ namespace FTween
                 if (loops != 0)
                 {
                     loops--;
-                    onLoopComplete?.Invoke();
+                    try
+                    {
+                        onLoopComplete?.Invoke();
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log("Error has been thrown during invoke of onLoopComplete of tween: " + e.Message);
+                        Debug.Log(e.StackTrace);
+                    }
                     ResetCurrentLoop();
                 }
                 else
                 {
-                    onComplete?.Invoke();
+                    try
+                    {
+                        onComplete?.Invoke();
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log("Error has been thrown during invoke of onComplete of tween: " + e.Message);
+                        Debug.Log(e.StackTrace);
+                    }
                     _isComplete = true;
                     if(parentSeq == null)
                         Kill();
@@ -274,7 +317,7 @@ namespace FTween
 
         internal override void SetValueByNormal(float normal)
         {
-            setter(startValue+difference*normal);
+            SetSafe(startValue+difference*normal);
         }
 
         public static Sequence Shake(FGetter<float> getter, FSetter<float> setter, float offset, float time, float strength = 90, int vibrato = 10, float randomness = 90, bool fade = true)
@@ -325,7 +368,7 @@ namespace FTween
 
         internal override void SetValueByNormal(float normal)
         {
-            setter(startValue + difference * normal);
+            SetSafe(startValue + difference * normal);
         }
     }
 
@@ -345,7 +388,7 @@ namespace FTween
 
         internal override void SetValueByNormal(float normal)
         {
-            setter(startValue + difference * normal);
+            SetSafe(startValue + difference * normal);
         }
     }
     public class Vector3FTweener : FTweener<Vector3>
@@ -364,7 +407,7 @@ namespace FTween
 
         internal override void SetValueByNormal(float normal)
         {
-            setter(startValue + difference * normal);
+            SetSafe(startValue + difference * normal);
         }
     }
     public class Vector2FTweener : FTweener<Vector2>
@@ -383,7 +426,7 @@ namespace FTween
 
         internal override void SetValueByNormal(float normal)
         {
-            setter(startValue + difference * normal);
+            SetSafe(startValue + difference * normal);
         }
         public static Sequence Shake(FGetter<Vector2> getter, FSetter<Vector2> setter, Vector2 offset, float time, float strength = 2, int vibrato = 2, float randomness = 2, bool fade = true)
         {
@@ -409,7 +452,7 @@ namespace FTween
 
         internal override void SetValueByNormal(float normal)
         {
-            setter(startValue + difference * normal);
+            SetSafe(startValue + difference * normal);
         }
     }
 }

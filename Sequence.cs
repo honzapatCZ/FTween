@@ -103,12 +103,28 @@ namespace FTween
                 if (loops != 0)
                 {
                     loops--;
-                    onLoopComplete?.Invoke();
+                    try
+                    {
+                        onLoopComplete?.Invoke();
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log("Error has been thrown during invoke of onLoopComplete of tween: " + e.Message);
+                        Debug.Log(e.StackTrace);
+                    }
                     ResetCurrentLoop();
                 }
                 else
                 {
-                    onComplete?.Invoke();
+                    try
+                    {
+                        onComplete?.Invoke();
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log("Error has been thrown during invoke of onComplete of tween: " + e.Message);
+                        Debug.Log(e.StackTrace);
+                    }
                     _isComplete = true;
                     if (parentSeq == null)
                         Kill();

@@ -45,16 +45,16 @@ namespace FTween
                     tween.Setup();
             }
             toAddTweens.Clear();
-
-            foreach (FTweener tween in tweens)
-            {
-                tween.update(Time.DeltaTime);
-            }
             foreach (FTweener tween in toRemoveTweens)
             {
                 tweens.Remove(tween);
             }
             toRemoveTweens.Clear();
+
+            foreach (FTweener tween in tweens)
+            {
+                tween.update(Time.DeltaTime);
+            }
         }
 
         public static FTweenScene Instance {
