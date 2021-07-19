@@ -320,15 +320,18 @@ namespace FTween
             SetSafe(startValue+difference*normal);
         }
 
-        public static Sequence Shake(FGetter<float> getter, FSetter<float> setter, float offset, float time, float strength = 90, int vibrato = 10, float randomness = 90, bool fade = true)
+        public static Sequence Shake(FGetter<float> getter, FSetter<float> setter, float offset, float time, float strength = 90, int vibrato = 10, float randomness = 90, bool fade = true, Random rnd = null)
         {
+            if (rnd == null)
+                rnd = new Random();
+
             Sequence seq = new Sequence();
-            Random rnd = new Random();
             int steps = vibrato + 1;
+            int equality = rnd.Next(0, 2);
             for(int i = 1; i <= steps; i++)
             {
                 float random = FlaxEngine.Utilities.Extensions.NextFloat(rnd, -randomness, randomness);
-                float endVal = random + strength * (i % 2 == 0 ? -1 : 1);
+                float endVal = random + strength * (i % 2 == equality ? -1 : 1);
                 float dur = time / steps;
                 if (fade)
                 {
@@ -409,12 +412,40 @@ namespace FTween
         {
             SetSafe(startValue + difference * normal);
         }
-        public static Sequence Shake(FGetter<Vector3> getter, FSetter<Vector3> setter, Vector3 offset, float time, float strength = 2, int vibrato = 2, float randomness = 2, bool fade = true)
+        public static Sequence Shake(FGetter<Vector3> getter, FSetter<Vector3> setter, Vector3 offset, float time, float strength = 2, int vibrato = 2, float randomness = 2, bool fade = true, Random rnd = null)
         {
+            return Shake(getter, setter, offset, time, new Vector3(strength), vibrato, randomness, fade, rnd);
+        }
+        public static Sequence Shake(FGetter<Vector3> getter, FSetter<Vector3> setter, Vector3 offset, float time, Vector3 strength, int vibrato = 2, float randomness = 2, bool fade = true, Random rnd = null)
+        {
+            if (rnd == null)
+                rnd = new Random();
+
             Sequence seq = new Sequence();
-            seq.Insert(FloatFTweener.Shake(() => getter().X, (y) => setter(new Vector3(y, getter().Y, getter().Z)), offset.X, time, strength, vibrato, randomness, fade));
-            seq.Insert(FloatFTweener.Shake(() => getter().Y, (y) => setter(new Vector3(getter().X, y, getter().Z)), offset.Y, time, strength, vibrato, randomness, fade));
-            seq.Insert(FloatFTweener.Shake(() => getter().Z, (y) => setter(new Vector3(getter().X, getter().Y, y)), offset.Z, time, strength, vibrato, randomness, fade));
+            int steps = vibrato + 1;
+            int equality = rnd.Next(0, 2);
+            for (int i = 1; i <= steps; i++)
+            {
+                Vector3 random = FlaxEngine.Utilities.Extensions.NextVector3(rnd, -randomness, randomness);
+                Vector3 endVal = random + strength * (i % 2 == equality ? -1 : 1);
+                float dur = time / steps;
+                if (fade)
+                {
+                    endVal = endVal * (1 - (i / steps));
+                    dur = ((2 * time - 2 * (steps + 1)) / (steps * (steps + 1))) * i;
+                    Debug.Log(dur);
+                }
+                if (i == 1)
+                {
+                    dur /= 2;
+                }
+                else if (i == steps)
+                {
+                    dur /= 2;
+                    endVal = Vector3.Zero;
+                }
+                seq.Append(new Vector3FTweener(getter, setter, endVal + offset, dur).SetEase(Ease.Linear));
+            }
             return seq;
         }
     }
@@ -436,11 +467,42 @@ namespace FTween
         {
             SetSafe(startValue + difference * normal);
         }
-        public static Sequence Shake(FGetter<Vector2> getter, FSetter<Vector2> setter, Vector2 offset, float time, float strength = 2, int vibrato = 2, float randomness = 2, bool fade = true)
+        public static Sequence Shake(FGetter<Vector2> getter, FSetter<Vector2> setter, Vector2 offset, float time, float strength = 2, int vibrato = 2, float randomness = 2, bool fade = true, Random rnd = null)
         {
+            return Shake(getter, setter, offset, time, new Vector2(strength), vibrato, randomness, fade, rnd);
+        }
+
+        public static Sequence Shake(FGetter<Vector2> getter, FSetter<Vector2> setter, Vector2 offset, float time, Vector2 strength, int vibrato = 2, float randomness = 2, bool fade = true, Random rnd = null)
+        {
+            if (rnd == null)
+                rnd = new Random();
+
+
             Sequence seq = new Sequence();
-            seq.Insert(FloatFTweener.Shake(() => getter().X, (y) => setter(new Vector2(y, getter().Y)), offset.X, time, strength, vibrato, randomness, fade));
-            seq.Insert(FloatFTweener.Shake(() => getter().Y, (y) => setter(new Vector2(getter().X, y)), offset.Y, time, strength, vibrato, randomness, fade));
+            int steps = vibrato + 1;
+            int equality = rnd.Next(0, 2);
+            for (int i = 1; i <= steps; i++)
+            {
+                Vector2 random = FlaxEngine.Utilities.Extensions.NextVector2(rnd, -randomness, randomness);
+                Vector2 endVal = random + strength * (i % 2 == equality ? -1 : 1);
+                float dur = time / steps;
+                if (fade)
+                {
+                    endVal = endVal * (1 - (i / steps));
+                    dur = ((2 * time - 2 * (steps + 1)) / (steps * (steps + 1))) * i;
+                    Debug.Log(dur);
+                }
+                if (i == 1)
+                {
+                    dur /= 2;
+                }
+                else if (i == steps)
+                {
+                    dur /= 2;
+                    endVal = Vector2.Zero;
+                }
+                seq.Append(new Vector2FTweener(getter, setter, endVal + offset, dur).SetEase(Ease.Linear));
+            }
             return seq;
         }
     }

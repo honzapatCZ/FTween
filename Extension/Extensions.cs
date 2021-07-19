@@ -102,28 +102,28 @@ namespace FTween
 
         public static Sequence FTShakePosition(this Actor actor, float time, float strength = 2, int vibrato = 2, float randomness = 2, bool fade = true)
         {
-            return Vector3FTweener.Shake(() => actor.Position, (y) => actor.Position = y, actor.Position, time, strength, vibrato, randomness, fade);
+            return Vector3FTweener.Shake(() => actor.LocalPosition, (y) => actor.LocalPosition = y, actor.LocalPosition, time, strength, vibrato, randomness, fade);
         }
         public static Sequence FTShakePositionX(this Actor actor, float time, float strength = 2, int vibrato = 2, float randomness = 2, bool fade = true)
         {
-            return FloatFTweener.Shake(() => actor.Position.X, (y) => actor.Position += Vector3.Right * (y - actor.Position.X), actor.Position.X, time, strength, vibrato, randomness, fade);
+            return FloatFTweener.Shake(() => actor.LocalPosition.X, (y) => actor.LocalPosition += Vector3.Right * (y - actor.LocalPosition.X), actor.LocalPosition.X, time, strength, vibrato, randomness, fade);
         }
         public static Sequence FTShakePositionY(this Actor actor, float time, float strength = 2, int vibrato = 2, float randomness = 2, bool fade = true)
         {
-            return FloatFTweener.Shake(() => actor.Position.Y, (y) => actor.Position += Vector3.Up * (y - actor.Position.Y), actor.Position.Y, time, strength, vibrato, randomness, fade);
+            return FloatFTweener.Shake(() => actor.LocalPosition.Y, (y) => actor.LocalPosition += Vector3.Up * (y - actor.LocalPosition.Y), actor.LocalPosition.Y, time, strength, vibrato, randomness, fade);
         }
         public static Sequence FTShakePositionZ(this Actor actor, float time, float strength = 2, int vibrato = 2, float randomness = 2, bool fade = true)
         {
-            return FloatFTweener.Shake(() => actor.Position.Z, (y) => actor.Position += Vector3.Forward * (y - actor.Position.Z), actor.Position.Z, time, strength, vibrato, randomness, fade);
+            return FloatFTweener.Shake(() => actor.LocalPosition.Z, (y) => actor.LocalPosition += Vector3.Forward * (y - actor.LocalPosition.Z), actor.LocalPosition.Z, time, strength, vibrato, randomness, fade);
         }
 
         public static Sequence FTShakeRotation(this Actor actor, float time, float strength = 90, int vibrato = 10, float randomness = 90, bool fade = true)
         {
-            return Vector3FTweener.Shake(() => actor.EulerAngles, (y) => actor.EulerAngles = y, actor.EulerAngles, time, strength, vibrato, randomness, fade);
+            return Vector3FTweener.Shake(() => actor.LocalEulerAngles, (y) => actor.LocalEulerAngles = y, actor.LocalEulerAngles, time, strength, vibrato, randomness, fade);
         }
         public static Sequence FTShakeScale(this Actor actor, float time, float strength = 2, int vibrato = 2, float randomness = 2, bool fade = true)
         {
-            return Vector3FTweener.Shake(() => actor.Scale, (y) => actor.Scale = y, actor.Scale, time, strength, vibrato, randomness, fade);
+            return Vector3FTweener.Shake(() => actor.LocalScale, (y) => actor.LocalScale = y, actor.LocalScale, time, strength, vibrato, randomness, fade);
         }
 
         public static FloatFTweener FTFade(this AudioSource actor, float endPos, float time)
