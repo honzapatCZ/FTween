@@ -10,7 +10,7 @@ namespace FTween
             
         }
 
-        public override FTweener Reverse()
+        public override FTweener Reverse(bool val)
         {
             Debug.LogWarning("You cant reverse a sequence");
             return this;

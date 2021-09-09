@@ -70,7 +70,18 @@ namespace FTween
             return this;
         }
 
-        public abstract FTweener Reverse();
+        internal bool isReversed = false;
+        public virtual FTweener Reverse(bool reverse)
+        {
+            if (setup) Debug.LogWarning("Tried to modify running tween");
+            isReversed = reverse;
+            return this;
+        }
+        public virtual FTweener Reverse()
+        {
+            Reverse(!isReversed);
+            return this;
+        }
 
         internal bool _isComplete;
         public bool isComplete
@@ -202,7 +213,18 @@ namespace FTween
         internal override void InnerSetup()
         {
             base.InnerSetup();
-            this.startValue = GetSafe();
+            if (usesFrom)
+                this.startValue = actuallyStartFrom;
+            else
+                this.startValue = GetSafe();
+
+            if (isReversed)
+            {
+                T1 prevEnd = endValue;
+                endValue = startValue;
+                startValue = prevEnd;
+            }
+
             this.difference = GetDifference();
         }
         /*
@@ -212,24 +234,17 @@ namespace FTween
             setter(startValue);
         }
         */
+
+        T1 actuallyStartFrom;
+        bool usesFrom;
         public virtual FTweener From(T1 theVal)
         {
-            endValue = startValue;
-            startValue = theVal;
+            actuallyStartFrom = theVal;
+            usesFrom = true;
 
-            difference = GetDifference();
             return this;
         }
 
-        public override FTweener Reverse()
-        {
-            T1 prevEnd = endValue;
-            endValue = startValue;
-            startValue = prevEnd;
-
-            difference = GetDifference();
-            return this;
-        }
         internal override void update(float delta)
         {
             timeFromStart += delta*timeScale;
