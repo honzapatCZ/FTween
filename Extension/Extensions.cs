@@ -31,6 +31,23 @@ namespace FTween
             return Vector2FTweener.Shake(() => actor.Scale, (y) => actor.Scale = y, actor.Scale, time, strength, vibrato, randomness, fade);
         }
 
+        public static Vector2FTweener FTLocalLocation(this FlaxEngine.GUI.Control actor, Vector2 endPos, float time)
+        {
+            return new Vector2FTweener(() => actor.LocalLocation, (y) => actor.LocalLocation = y, endPos, time);
+        }
+        public static FloatFTweener FTLocalLocationX(this FlaxEngine.GUI.Control actor, float endPos, float time)
+        {
+            return new FloatFTweener(() => actor.LocalLocation.X, (y) => actor.LocalLocation += new Vector2(1, 0) * (y - actor.LocalLocation.X), endPos, time);
+        }
+        public static FloatFTweener FTLocalLocationY(this FlaxEngine.GUI.Control actor, float endPos, float time)
+        {
+            return new FloatFTweener(() => actor.LocalLocation.Y, (y) => actor.LocalLocation += new Vector2(0, 1) * (y - actor.LocalLocation.Y), endPos, time);
+        }
+        public static Sequence FTShakeLocalLocation(this FlaxEngine.GUI.Control actor, float time, float strength = 2, int vibrato = 2, float randomness = 2, bool fade = true)
+        {
+            return Vector2FTweener.Shake(() => actor.LocalLocation, (y) => actor.LocalLocation = y, actor.LocalLocation, time, strength, vibrato, randomness, fade);
+        }
+
         public static Vector3FTweener FTMove(this Actor actor, Vector3 endPos, float time)
         {
             return new Vector3FTweener(() => actor.Position, (y) => actor.Position = y, endPos, time);
