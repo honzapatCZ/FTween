@@ -368,6 +368,25 @@ namespace FTween
 
             return seq;
         }
+
+        public static Sequence Jump(FGetter<float> getter, FSetter<float> setter, float offset, float time, float strength = 90, int jumps = 10, float randomness = 90, Random rnd = null)
+        {
+            if (rnd == null)
+                rnd = new Random();
+
+            Sequence seq = new Sequence();
+            int steps = jumps * 2;
+            int equality = rnd.Next(0, 2);
+            for (int i = 1; i <= steps; i++)
+            {
+                float random = FlaxEngine.Utilities.Extensions.NextFloat(rnd, -randomness, randomness);
+                float endVal = (i % 2 == 0 ? 0 : random) + strength * (i % 2 == 0 ? 0 : 1);
+                float dur = time / steps;
+                seq.Append(new FloatFTweener(getter, setter, endVal + offset, dur).SetEase(Ease.Linear));
+            }
+
+            return seq;
+        }
     }
 
     public class ColorFTweener : FTweener<Color>
@@ -463,6 +482,28 @@ namespace FTween
             }
             return seq;
         }
+        public static Sequence Jump(FGetter<Vector3> getter, FSetter<Vector3> setter, Vector3 offset, float time, float strength = 90, int jumps = 10, float randomness = 90, Random rnd = null)
+        {
+            return Jump(getter, setter, offset, time, new Vector3(strength), jumps, randomness, rnd);
+        }
+        public static Sequence Jump(FGetter<Vector3> getter, FSetter<Vector3> setter, Vector3 offset, float time, Vector3 strength, int jumps = 10, float randomness = 90, Random rnd = null)
+        {
+            if (rnd == null)
+                rnd = new Random();
+
+            Sequence seq = new Sequence();
+            int steps = jumps * 2;
+            int equality = rnd.Next(0, 2);
+            for (int i = 1; i <= steps; i++)
+            {
+                Vector3 random = FlaxEngine.Utilities.Extensions.NextVector3(rnd, -randomness, randomness);
+                Vector3 endVal = (i % 2 == 0 ? Vector3.Zero : random) + strength * (i % 2 == 0 ? 0 : 1);
+                float dur = time / steps;
+                seq.Append(new Vector3FTweener(getter, setter, endVal + offset, dur).SetEase(Ease.Linear));
+            }
+
+            return seq;
+        }
     }
     public class Vector2FTweener : FTweener<Vector2>
     {
@@ -518,6 +559,28 @@ namespace FTween
                 }
                 seq.Append(new Vector2FTweener(getter, setter, endVal + offset, dur).SetEase(Ease.Linear));
             }
+            return seq;
+        }
+        public static Sequence Jump(FGetter<Vector2> getter, FSetter<Vector2> setter, Vector2 offset, float time, float strength = 90, int jumps = 10, float randomness = 90, Random rnd = null)
+        {
+            return Jump(getter, setter, offset, time, new Vector2(strength), jumps, randomness, rnd);
+        }
+        public static Sequence Jump(FGetter<Vector2> getter, FSetter<Vector2> setter, Vector2 offset, float time, Vector2 strength, int jumps = 10, float randomness = 90, Random rnd = null)
+        {
+            if (rnd == null)
+                rnd = new Random();
+
+            Sequence seq = new Sequence();
+            int steps = jumps * 2;
+            int equality = rnd.Next(0, 2);
+            for (int i = 1; i <= steps; i++)
+            {
+                Vector2 random = FlaxEngine.Utilities.Extensions.NextVector2(rnd, -randomness, randomness);
+                Vector2 endVal = (i % 2 == 0 ? Vector2.Zero : random) + strength * (i % 2 == 0 ? 0 : 1);
+                float dur = time / steps;
+                seq.Append(new Vector2FTweener(getter, setter, endVal + offset, dur).SetEase(Ease.Linear));
+            }
+
             return seq;
         }
     }
