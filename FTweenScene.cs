@@ -6,6 +6,23 @@ namespace FTween
 {
     public class FTweenScene : GamePlugin
     {
+        public FTweenScene()
+        {
+            _description = new PluginDescription
+            {
+                Name = "FTween Runtime Game Plugin",
+                Version = new Version(0, 1),
+                Author = "honzapat_CZ",
+                AuthorUrl = "https://github.com/honzapatCZ, https://nejcraft.cz",
+                HomepageUrl = "https://github.com/honzapatCZ/FTween",
+                RepositoryUrl = "https://github.com/honzapatCZ/FTween",
+                Description = "This is the runtime plugin of FTween it manages tween updates",
+                Category = "Utility, Tweening",
+                IsBeta = true,
+                IsAlpha = false
+            };
+        }
+
         public List<FTweener> tweens = new List<FTweener>();
         public List<FTweener> toAddTweens = new List<FTweener>();
         public List<FTweener> toRemoveTweens = new List<FTweener>();
@@ -23,18 +40,6 @@ namespace FTween
             toRemoveTweens.Clear();
             base.Deinitialize();
         }
-        public override PluginDescription Description => new PluginDescription {
-            Name = "FTween Runtime Game Plugin",
-            Version = new Version(0,1),
-            Author = "honzapat_CZ",
-            AuthorUrl = "https://github.com/honzapatCZ, https://nejcraft.cz",
-            HomepageUrl = "https://github.com/honzapatCZ/FTween",
-            RepositoryUrl = "https://github.com/honzapatCZ/FTween",
-            Description = "This is the runtime plugin of FTween it manages tween updates",
-            Category = "Utility, Tweening",
-            IsBeta = true,
-            IsAlpha = false
-        };
 
         void OnUpdate()
         {
@@ -57,7 +62,8 @@ namespace FTween
             }
         }
 
-        public static FTweenScene Instance {
+        public static FTweenScene Instance
+        {
             get
             {
                 return PluginManager.GetPlugin<FTweenScene>();
@@ -86,7 +92,8 @@ namespace FTween
         {
             if (!Platform.IsInMainThread)
             {
-                Scripting.InvokeOnUpdate(() => {
+                Scripting.InvokeOnUpdate(() =>
+                {
                     AddTween(tween);
                 });
                 return;
@@ -97,7 +104,8 @@ namespace FTween
         {
             if (!Platform.IsInMainThread)
             {
-                Scripting.InvokeOnUpdate(() => {
+                Scripting.InvokeOnUpdate(() =>
+                {
                     RemoveTween(tween);
                 });
                 return;
