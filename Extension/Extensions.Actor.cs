@@ -129,5 +129,17 @@ namespace FTween
         {
             return Vector3FTweener.Jump(() => actor.LocalScale, (y) => actor.LocalScale = y, actor.LocalScale, time, strength, jumps, randomness);
         }
+        public static Sequence FTJumpScaleX(this Actor actor, float time, float strength = 2, int jumps = 2, float randomness = 2)
+        {
+            return FloatFTweener.Jump(() => actor.LocalScale.X, (y) => actor.LocalScale += Vector3.Right * (y - actor.LocalScale.X), actor.LocalScale.X, time, strength, jumps, randomness);
+        }
+        public static Sequence FTJumpScaleY(this Actor actor, float time, float strength = 2, int jumps = 2, float randomness = 2)
+        {
+            return FloatFTweener.Jump(() => actor.LocalScale.Y, (y) => actor.LocalScale += Vector3.Up * (y - actor.LocalScale.Y), actor.LocalScale.Y, time, strength, jumps, randomness);
+        }
+        public static Sequence FTJumpScaleZ(this Actor actor, float time, float strength = 2, int jumps = 2, float randomness = 2)
+        {
+            return FloatFTweener.Jump(() => actor.LocalScale.Z, (y) => actor.LocalScale += Vector3.Forward * (y - actor.LocalScale.Z), actor.LocalScale.Z, time, strength, jumps, randomness);
+        }
     }
 }
